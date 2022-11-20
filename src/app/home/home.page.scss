@@ -1,0 +1,8 @@
+#modal {
+  &.center {
+    --width: calc(100% - 2em);
+    align-items: center;
+    --height: auto;
+  }
+}
+

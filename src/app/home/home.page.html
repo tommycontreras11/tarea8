@@ -1,0 +1,127 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Home
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Home</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">Título</ion-label>
+        <ion-input clearInput value="X" type="text" placeholder="Enter a title" [(ngModel)]="title"></ion-input>
+      </ion-item>
+      <ion-item>
+        
+        <ion-label>Fecha</ion-label>
+        
+        <ion-note slot="end">{{ date | date: 'dd/MM/yyyy' }}</ion-note>
+        
+        <ion-icon name="calendar-outline" id="open-modal" slot="end"></ion-icon>
+        
+        <ion-modal trigger="open-modal" id="modal" [cssClass]="'center'">
+          <ng-template>
+            <ion-datetime displayFormat="dd/MM/yyyy"
+              [(ngModel)]="date"
+              presentation="date"
+              [showDefaultButtons]="true"
+              size="cover"
+            ></ion-datetime>
+          </ng-template>
+        </ion-modal>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Descripción</ion-label>
+        <ion-input clearInput value="X" type="text" placeholder="Enter a description" [(ngModel)]="description"></ion-input>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-button style="width: 120px; height: 40px; font-size: 14px; text-transform: none;" (click)="pickImageFromGallery()">Seleccionar foto</ion-button>
+        <ion-button style="width: 100px; height: 40px; font-size: 14px; text-transform: none;" (click)="takePicture()">Tomar foto</ion-button>
+      </ion-item>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="10">
+          <span *ngIf="!recording">
+            Press and hold to record
+          </span>
+          <span *ngIf="recording">
+            {{durationDisplay}}
+          </span>
+        </ion-col>
+        <ion-col size="2">
+          <ion-button fill="clear" #recordbtn>
+            <ion-icon name="mic-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <br/>
+      <ion-item lines="none">
+        <ion-button style="width: 100px; height: 40px; font-size: 14px; text-transform: none;" (click)="Vivencia()">Guardar</ion-button>
+      </ion-item>
+      <br/>
+      <ion-item-sliding *ngFor="let item of result">
+        <ion-item-options side="start">
+          <ion-item-option color="success" id="open-modal2" (click)="Details(item.id)" style="text-transform: none; color: black;">
+            <ion-icon slot="end" name="clipboard-outline"></ion-icon>
+            Detalles
+          </ion-item-option>
+        </ion-item-options>
+    
+        <ion-item>
+          <ion-label>
+            {{item.title}}
+          </ion-label>
+        </ion-item>
+    
+        <ion-item-options>
+          <ion-item-option color="danger" (click)="Delete()" style="text-transform: none; color: black;">
+            <ion-icon slot="end" name="close-circle-outline"></ion-icon>
+            Eliminar todo
+          </ion-item-option>
+          <ion-item-option color="warning" (click)="DeleteById(item.id)" style="text-transform: none; color: black;">
+            <ion-icon slot="end" name="trash"></ion-icon>
+            Eliminar
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      <ion-modal [isOpen]="isModalOpen">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>Modal</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="setOpen(false)">Close</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <ion-card  *ngFor="let item of data">
+              <img [src]="item.image">
+              <ion-card-header>
+                <ion-card-title>{{item.title}}</ion-card-title>
+                <ion-card-subtitle>{{item.date}}</ion-card-subtitle>
+              </ion-card-header>
+            
+              <ion-card-content>
+                {{item.description}}
+                <ion-item button (click)="playFile(item.audio)" detail="true">
+                  {{item.audio}}
+                  <ion-button fill="clear" (click)="deleteRecording(item.audio)" color="danger" slot="end">
+                    <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+    </ion-list>
+  </div>
+</ion-content>
